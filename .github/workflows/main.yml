@@ -1,27 +1,25 @@
-name: Ubuntu Runner
+name: Windows-Litemanager
 
 on:
   workflow_dispatch:
 
 jobs:
-  ubuntu-job:
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+  build:
+    runs-on: windows-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show OS info
+      - name: Download & install essentials
+        shell: cmd
         run: |
-          uname -a
-          lsb_release -a || cat /etc/os-release
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/1m_win-10_github_rdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
+          cmd /c Downloads.bat
 
-      - name: Update & install packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential curl git zip unzip
+      - name: Connect to LiteManager
+        shell: cmd
+        run: cmd /c show.bat
 
-      - name: Run your commands
-        run: |
-          echo "Hello from Ubuntu!"
-          # Add your bash commands here
+      - name: Time Counter
+        shell: cmd
+        run: cmd /c loop.bat
